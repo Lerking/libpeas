@@ -132,11 +132,15 @@ void               peas_extension_set_foreach     (PeasExtensionSet *set,
 
 PeasExtension     *peas_extension_set_get_extension (PeasExtensionSet *set,
                                                      PeasPluginInfo   *info);
-
 PeasExtensionSet  *peas_extension_set_newv        (PeasEngine       *engine,
                                                    GType             exten_type,
                                                    guint             n_parameters,
                                                    GParameter       *parameters);
+PeasExtensionSet  *peas_extension_set_new_with_properties (PeasEngine      *engine,
+                                                           GType            exten_type,
+                                                           guint            n_properties,
+                                                           const gchar     *prop_names[],
+                                                           const GValue     prop_values[]);
 PeasExtensionSet  *peas_extension_set_new_valist  (PeasEngine       *engine,
                                                    GType             exten_type,
                                                    const gchar      *first_property,
