@@ -24,6 +24,7 @@
 
 #include <glib-object.h>
 #include "peas-engine.h"
+#include "peas-version-macros.h"
 
 G_BEGIN_DECLS
 
@@ -132,10 +133,12 @@ void               peas_extension_set_foreach     (PeasExtensionSet *set,
 
 PeasExtension     *peas_extension_set_get_extension (PeasExtensionSet *set,
                                                      PeasPluginInfo   *info);
+PEAS_DEPRECATED_IN_1_20_FOR(peas_extension_set_new_with_properties)
 PeasExtensionSet  *peas_extension_set_newv        (PeasEngine       *engine,
                                                    GType             exten_type,
                                                    guint             n_parameters,
                                                    GParameter       *parameters);
+PEAS_AVAILABLE_IN_1_20
 PeasExtensionSet  *peas_extension_set_new_with_properties (PeasEngine      *engine,
                                                            GType            exten_type,
                                                            guint            n_properties,
@@ -149,7 +152,6 @@ PeasExtensionSet  *peas_extension_set_new         (PeasEngine       *engine,
                                                    GType             exten_type,
                                                    const gchar      *first_property,
                                                    ...);
-
 G_END_DECLS
 
 #endif /* __PEAS_EXTENSION_SET_H__ */

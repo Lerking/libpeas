@@ -618,6 +618,8 @@ peas_extension_set_foreach (PeasExtensionSet            *set,
  * See peas_extension_set_new() for more information.
  *
  * Returns: (transfer full): a new instance of #PeasExtensionSet.
+ *
+ * Deprecated: 1.20
  */
 PeasExtensionSet *
 peas_extension_set_newv (PeasEngine *engine,
@@ -652,6 +654,8 @@ peas_extension_set_newv (PeasEngine *engine,
  * See peas_extension_set_new() for more information.
  *
  * Returns: (transfer full): a new instance of #PeasExtensionSet.
+ *
+ * Since: 1.20.0
  */
 PeasExtensionSet *
 peas_extension_set_new_with_properties (PeasEngine      *engine,
