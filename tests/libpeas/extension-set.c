@@ -147,6 +147,26 @@ test_extension_set_create_valid (PeasEngine *engine)
 }
 
 static void
+test_extension_set_create_valid_with_properties (PeasEngine *engine)
+{
+  PeasExtensionSet *extension_set;
+  GValue prop_values[1] = { G_VALUE_INIT };
+  const gchar *prop_names[1] = { "object" };
+
+  g_value_init (&prop_values[0], G_TYPE_POINTER);
+  g_value_set_pointer (&prop_values[0], NULL);
+
+  extension_set = peas_extension_set_new_with_properties (engine,
+                                                          PEAS_TYPE_ACTIVATABLE,
+                                                          1, prop_names,
+                                                          prop_values);
+  g_assert (PEAS_IS_EXTENSION_SET (extension_set));
+  g_object_unref (extension_set);
+  g_value_unset (&prop_values[0]);
+}
+
+
+static void
 test_extension_set_create_invalid (PeasEngine *engine)
 {
   PeasExtensionSet *extension_set;
@@ -171,6 +191,36 @@ test_extension_set_create_invalid (PeasEngine *engine)
                                           NULL);
   g_assert (!PEAS_IS_EXTENSION_SET (extension_set));
 }
+
+static void
+test_extension_set_create_invalid_with_properties (PeasEngine *engine)
+{
+  PeasExtensionSet *extension_set;
+  GValue prop_values[2] = { G_VALUE_INIT };
+  const gchar *prop_names[2] = { "object", NULL };
+
+  testing_util_push_log_hook ("*property name*should not be NULL.");
+  testing_util_push_log_hook ("*assertion*G_TYPE_IS_INTERFACE*failed");
+
+
+  g_value_init (&prop_values[0], G_TYPE_POINTER);
+  g_value_set_pointer (&prop_values[0], NULL);
+
+  /* Interface has a NULL property name*/
+  extension_set = peas_extension_set_new_with_properties (engine,
+                                                          PEAS_TYPE_ACTIVATABLE,
+                                                          2, prop_names,
+                                                          prop_values);
+  g_assert (!PEAS_IS_EXTENSION_SET (extension_set));
+  g_value_unset (&prop_values[0]);
+
+  /* Invalid GType */
+  extension_set = peas_extension_set_new_with_properties (engine,
+                                                          G_TYPE_INVALID,
+                                                          0, NULL, NULL);
+  g_assert (!PEAS_IS_EXTENSION_SET (extension_set));
+}
+
 
 static void
 test_extension_set_extension_added (PeasEngine *engine)
@@ -345,6 +395,8 @@ main (int    argc,
 
   TEST ("create-valid", create_valid);
   TEST ("create-invalid", create_invalid);
+  TEST ("create-valid-with-properties", create_valid_with_properties);
+  TEST ("create-invalid-with-properties", create_invalid_with_properties);
 
   TEST ("extension-added", extension_added);
   TEST ("extension-removed", extension_removed);
