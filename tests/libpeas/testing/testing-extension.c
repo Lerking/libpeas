@@ -151,16 +151,35 @@ test_extension_create_valid_with_properties (PeasEngine     *engine,
   PeasExtension *extension;
   GValue unused_prop_values[3] = { G_VALUE_INIT };
   const gchar *unused_prop_names[3] = { "foo", "bar", "boo" };
+  guint i;
 
-  extension = peas_engine_create_extension (engine, info,
-                                            INTROSPECTION_TYPE_CALLABLE,
-                                            0, unused_prop_names,
-                                            unused_prop_values);
+  for (i = 0; i < 3; i++)
+    {
+      g_value_init (&unused_prop_values[i], G_TYPE_STRING);
+      g_value_set_string (&unused_prop_values[i], "whatever");
+    }
+
+  /* It seems that Python bindings redirects warnings to stdout */
+  if (g_strcmp0 (loader, "python") != 0 && g_strcmp0 (loader, "python3") != 0)
+    {
+      testing_util_push_log_hook ("*has no property named 'foo'");
+      testing_util_push_log_hook ("*has no property named 'bar'");
+      testing_util_push_log_hook ("*has no property named 'boo'");
+    }
+
+  extension =
+    peas_engine_create_extension_with_properties (engine, info,
+                                                  INTROSPECTION_TYPE_CALLABLE,
+                                                  3, unused_prop_names,
+                                                  unused_prop_values);
 
   g_assert (PEAS_IS_EXTENSION (extension));
   g_assert (INTROSPECTION_IS_CALLABLE (extension));
 
   g_object_unref (extension);
+
+  for (i = 0; i < 3; i++)
+    g_value_unset (&unused_prop_values[0]);
 }
 
 static void
